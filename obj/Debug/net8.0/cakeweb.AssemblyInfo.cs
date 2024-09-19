@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("cakeweb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+99232f301baa3df05b859d31ff787de2c2160e66")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a0c2eab405875e68827bcf6235c4f7d7e09e78c0")]
 [assembly: System.Reflection.AssemblyProductAttribute("cakeweb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("cakeweb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
