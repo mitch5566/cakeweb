@@ -1,9 +1,24 @@
+using cakeweb;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// // Add services to the container.
+// builder.Services.AddControllersWithViews();
+
+// 加入服務，並設定 MySQL 的連線字串
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    new MySqlServerVersion(new Version(8, 0, 26))));
+
+builder.Services.AddControllers();  // 註冊 MVC 控制器服務
+
+
 
 var app = builder.Build();
+
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
