@@ -27,8 +27,9 @@
       </div>
   
       <div class="total" v-if="allProducts.length > 0">
-        <span>總購買數量: {{ totalPurchaseQuantity }}</span>
-      </div>
+      <span>總購買數量: {{ totalPurchaseQuantity }}</span>
+      <span>總價: {{ totalPrice }} 元</span> <!-- 添加總價顯示 -->
+    </div>
   
       <button @click="submitOrder" v-if="allProducts.length > 0">送出訂單</button>
     </div>
@@ -78,6 +79,13 @@
     return allProducts.value.reduce((total, product) => total + product.purchaseQuantity, 0);
   });
   
+// 計算總價
+const totalPrice = computed(() => {
+  return allProducts.value.reduce((total, product) => total + (product.purchaseQuantity * product.price), 0);
+});
+
+
+
   // 送出訂單
   const submitOrder = () => {
     const order = allProducts.value
