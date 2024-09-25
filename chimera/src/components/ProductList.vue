@@ -23,7 +23,13 @@
   
       <!-- 如果商品列表是空的，顯示 "加載中" -->
       <div v-else>
-        加載中...
+        <svg class="cart-svg qk-text--nav_menu_icon qk-vert--mid" xmlns="http://www.w3.org/2000/svg" height="24" width="32" viewBox="0 0 24 24" fill="none">
+<path d="M1 1H3.86592L7.40731 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M5 4H23L21.2347 14.0711L7.29582 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M11.9199 10.1201H16.2299" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M7 23C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21C6.44772 21 6 21.4477 6 22C6 22.5523 6.44772 23 7 23Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M20 23C20.5523 23 21 22.5523 21 22C21 21.4477 20.5523 21 20 21C19.4477 21 19 21.4477 19 22C19 22.5523 19.4477 23 20 23Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>加載中...
       </div>
   
       <div class="total" v-if="allProducts.length > 0">
@@ -36,9 +42,12 @@
   </template>
   
   <script setup>
-  import { ref, computed, onMounted } from 'vue';
+  import axios from 'axios';
+import { ref, computed, onMounted } from 'vue';
   import { useStore } from 'vuex';
   
+
+
   const store = useStore();
   
   // 使用 ref 初始化商品列表
@@ -74,6 +83,7 @@
     }
   };
   
+
   // 計算總購買數量
   const totalPurchaseQuantity = computed(() => {
     return allProducts.value.reduce((total, product) => total + product.purchaseQuantity, 0);
@@ -87,18 +97,119 @@ const totalPrice = computed(() => {
 
 
   // 送出訂單
-  const submitOrder = () => {
+  const submitOrder = async () => {
     const order = allProducts.value
       .filter(product => product.purchaseQuantity > 0)
       .map(product => ({
         ID: product.productID,
-        名: product.productName,
-        數量: product.purchaseQuantity
+        n: product.productName,
+        q: product.purchaseQuantity
       }));
   
-    // 使用 alert 提示購買數量
+
+   // 使用 alert 提示購買數量
     alert(JSON.stringify(order, null, 2));
+    alert('怕豹 來囉 ');
+
+    const orderPayload = {
+    MerchantID: "3002607",
+    MerchantTradeNo: "TestOrder" + Date.now(),
+    // MerchantTradeDate: new Date().toISOString(),
+    MerchantTradeDate: new Date().toLocaleString('sv'),
+    PaymentType: "aio",
+    TotalAmount: totalPrice.value,
+    TradeDesc: "Test Payment",
+    ItemName: order.map( p =>`${p.n}xOx${p.q}`).join("#"),
+    ReturnURL: "https://yourdomain.com/api/payment/",
+    ChoosePayment: "ALL",
+    EncryptType: 1
   };
+
+  const postData = {
+    title: "foo",
+    body: "bar",
+    userId: 1
+  };
+
+  // https://jsonplaceholder.typicode.com/posts
+  // http://localhost:5000/api/payment/CreatePayment
+  try {
+    const response = await axios("http://localhost:5000/api/payment/CreatePayment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(orderPayload)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+  
+  
+    const result = await response.json();
+    
+        // 顯示返回的值
+     console.log("Response from API:", result);
+    
+    // 如果您希望在頁面上顯示，可以使用 alert（如果值不大）
+      alert(JSON.stringify(result, null, 2));
+
+    // alert("J2");
+
+
+    const contentType = response.headers.get("Content-Type");
+
+  // let result;
+  // if (contentType && contentType.includes("application/json")) {
+  //   // 如果是 JSON 格式
+  //   result = await response.json();
+  // } else {
+  //   // 如果是 HTML 頁面
+  //   result = await response.text();
+  // }
+
+  // // 如果是 HTML 頁面，直接跳轉
+  // if (contentType && contentType.includes("text/html")) {
+  //   document.open();
+  //   document.write(result);
+  //   document.close();
+  // } else {
+  //   console.log(result);
+  // }
+
+
+    // 使用 window.location.href 進行頁面跳轉
+    window.location.href = result.paymentPage;
+  } catch (error) {
+    console.error("Error submitting order:", error);
+    alert("Failed to submit order.");
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+  };
+
+
+
+
+
+
+
+
+
+
+  
   </script>
 
 
