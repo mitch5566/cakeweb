@@ -1,8 +1,57 @@
 # Cakeweb Project Documentation v0.1
 
+# 流程圖說明
+
+此流程圖的完整內容可以在以下連結查看：[流程圖連結](https://mitch5566.github.io/flchartflv000.html)
+
+
+# 甜點店專案說明文件
+
+## 組織成員
+
+- **組長**：20鍾鴻見
+- **組員**：
+  - 10林彥廷
+  - 11葉政豪
+  - 25王楷仁
+  - 02陳正沛
+
+## 專案規格
+
+1. **會員功能**
+2. **購物車**
+
+## 使用技術
+
+### 1. 程式語言
+- **前端**：HTML、CSS、JavaScript
+- **後端**：.NET
+
+### 2. 框架和庫
+- **前端框架**：Vue.js
+- **後端框架**：ASP.NET Core（C#）
+- **資料庫**：MySQL
+
+### 3. 加入技術
+- **金流**：支付整合
+- **發票**：電子發票
+- **登入**：使用 Gmail 帳號登入
+
+## 專案程式碼連結
+
+- **前端**：[GitHub - my-vue-project](https://github.com/jeff-Morax/my-vue-project.git)
+- **後端**：[GitHub - cakeweb-git](https://github.com/AaronChen0627/cakeweb-git)
+
+
+
+
+
+
+
 ## 懶人指令
 
 用於部署、發布專案到目標伺服器：
+
 
 ```bash
 # 複製發佈檔案到指定伺服器
