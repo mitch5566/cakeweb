@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace cakeweb;
 
@@ -22,7 +22,8 @@ public class PaymentController : ControllerBase
     [HttpPost("CreatePayment")]
     public async Task<IActionResult> CreatePayment([FromBody] Dictionary<string, string> orderData)
     {
-
+          // 記錄接收到的請求
+        //Console.WriteLine($"Received request: {JsonConvert.SerializeObject(orderData)}");
         // Dictionary<string, string> orderData = new Dictionary<string, string>();
 
         // // 添加額外的必需參數
@@ -39,9 +40,28 @@ public class PaymentController : ControllerBase
     var result = await _paymentService.TestPostRequestAsync(orderData);
 
     // 回應支付頁面給前端
-    
+            
+            
+            //Console.WriteLine("看看裡面有什麼"+result);
 
-            return Ok(new { paymentPage = result });
+    if (result.Item1) // 布林值在 Item1
+    {
+        return new ContentResult
+        {
+            Content = result.Item2, // 內容在 Item2
+            ContentType = "text/html"
+        };
+    }
+    else
+    {
+        return BadRequest(new
+        {
+            Code = 400,
+            Message = "訂單失敗",
+            Details = result.Item2
+        });
+    }
+
           // return Content(result, "application/json");
 
     }

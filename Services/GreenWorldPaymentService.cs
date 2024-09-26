@@ -14,7 +14,7 @@ public class GreenWorldPaymentService
         _httpClient = httpClient;
     }
 
-    public async Task<string> TestPostRequestAsync (Dictionary<string, string> parameters)
+    public async Task<Tuple<bool, string>> TestPostRequestAsync (Dictionary<string, string> parameters)
     {
         // 測試使用 POST 請求到一個測試 API URL
         //var requestUrl = "https://jsonplaceholder.typicode.com/posts"; // 測試 API
@@ -38,6 +38,93 @@ public class GreenWorldPaymentService
         //     { "EncryptType", "1" }
         // };
 
+            // 處理需要格式化的字段
+    foreach (var key in parameters.Keys.ToList()) // 使用 ToList 防止修改字典時出錯
+    {
+        // 根據字段名進行格式化
+
+            switch (key)
+        {
+            case "MerchantID":
+                // 修正 MerchantID 為固定長度 10，不能為空
+                parameters[key] = parameters[key].ToString().Length > 10
+                    ? parameters[key].ToString().Substring(0, 10)
+                    : parameters[key].ToString().PadRight(10, ' ');
+                break;
+
+            case "MerchantTradeNo":
+                // 修正 MerchantTradeNo 為最多長度 20，不能為空
+                parameters[key] = parameters[key].ToString().Length > 20
+                    ? parameters[key].ToString().Substring(0, 20)
+                    : parameters[key].ToString();
+                break;
+
+            case "MerchantTradeDate":
+                // MerchantTradeDate 必須是 yyyy/MM/dd HH:mm:ss 格式
+                DateTime tradeDate;
+                if (DateTime.TryParse(parameters[key].ToString(), out tradeDate))
+                {
+                    parameters[key] = tradeDate.ToString("yyyy/MM/dd HH:mm:ss");
+                }
+                break;
+
+            case "PaymentType":
+                // PaymentType 為固定值 "aio"
+                parameters[key] = "aio";
+                break;
+
+            case "TotalAmount":
+                // TotalAmount 為數字，確保格式正確
+                if (int.TryParse(parameters[key].ToString(), out int amount))
+                {
+                    parameters[key] = amount.ToString();
+                }
+                break;
+
+            case "TradeDesc":
+                // TradeDesc 為長度最多 200 的字串
+                parameters[key] = parameters[key].ToString().Length > 200
+                    ? parameters[key].ToString().Substring(0, 200)
+                    : parameters[key].ToString();
+                break;
+
+            case "ItemName":
+                // ItemName 長度最多 400，中間用 # 分隔多個項目
+                parameters[key] = parameters[key].ToString().Length > 400
+                    ? parameters[key].ToString().Substring(0, 400)
+                    : parameters[key].ToString();
+                break;
+
+            case "ReturnURL":
+                // ReturnURL 為長度最多 200 的字串
+                parameters[key] = parameters[key].ToString().Length > 200
+                    ? parameters[key].ToString().Substring(0, 200)
+                    : parameters[key].ToString();
+                break;
+
+            case "ChoosePayment":
+                // ChoosePayment 為支付類型，確保是 ECPay 支持的支付方式之一
+                // 這裡假設 ChoosePayment 不為空
+                parameters[key] = parameters[key].ToString();
+                break;
+
+            case "EncryptType":
+                // EncryptType 為 1，固定值
+                parameters[key] = "1";
+                break;
+
+            // 其他需要處理的字段
+            // case "SomeOtherField":
+            //     parameters[key] = ... // 處理方式
+            //     break;
+
+            default:
+                // 可選：對於其他字段可以根據需要進行處理
+                break;
+        }
+            // 添加其他需要特殊格式處理的字段
+        }
+    
 
         // 使用 SortedDictionary 按鍵名排序
         var sortedParameters = parameters.OrderBy(p => p.Key).ToDictionary(p => p.Key, p => p.Value);
@@ -89,9 +176,7 @@ public class GreenWorldPaymentService
         }
         //毛很多要post就可以 FormUrlEncodedContent 
 
-
         var form1 = new FormUrlEncodedContent(parameters);
-
 
         // 發送 POST 請求
         var response = await _httpClient.PostAsync(requestUrl, form1);
@@ -100,12 +185,13 @@ public class GreenWorldPaymentService
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsStringAsync();
-            return result;
+        
+           return Tuple.Create(true, result); // 成功時返回 Tuple // 成功時返回 true 和內容
 
         }
         else
         {
-            return $"Error: {response.StatusCode}";
+            return Tuple.Create(false, response.StatusCode.ToString()); // 成功時返回 Tuple$"Error: {response.StatusCode}";
         }
 
     }

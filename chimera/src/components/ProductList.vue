@@ -106,7 +106,6 @@ const totalPrice = computed(() => {
         q: product.purchaseQuantity
       }));
   
-
    // 使用 alert 提示購買數量
     alert(JSON.stringify(order, null, 2));
     alert('怕豹 來囉 ');
@@ -117,24 +116,22 @@ const totalPrice = computed(() => {
     // MerchantTradeDate: new Date().toISOString(),
     MerchantTradeDate: new Date().toLocaleString('sv'),
     PaymentType: "aio",
-    TotalAmount: totalPrice.value,
+    TotalAmount: (totalPrice.value).toString(),
+
     TradeDesc: "Test Payment",
-    ItemName: order.map( p =>`${p.n}xOx${p.q}`).join("#"),
+    // ItemName: order.map( p =>`${p.n}xOx${p.q}`).join("#").toString(),
+    ItemName: "qqqqqq",
     ReturnURL: "https://yourdomain.com/api/payment/",
     ChoosePayment: "ALL",
-    EncryptType: 1
+    EncryptType: (1).toString()
   };
 
-  const postData = {
-    title: "foo",
-    body: "bar",
-    userId: 1
-  };
 
   // https://jsonplaceholder.typicode.com/posts
   // http://localhost:5000/api/payment/CreatePayment
+  alert(JSON.stringify(orderPayload));
   try {
-    const response = await axios("http://localhost:5000/api/payment/CreatePayment", {
+    const response = await fetch("http://localhost:5000/api/payment/CreatePayment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -142,61 +139,59 @@ const totalPrice = computed(() => {
       body: JSON.stringify(orderPayload)
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+    
+      // 檢查回應狀態
+      if (response.ok) {
+      // 如果狀態碼是 200，則表示是 ContentResult
+      const htmlContent = await response.text(); // 以文字形式獲取內容
+
+      // 創建一個新的窗口，打開 HTML 內容
+      const newWindow = window.open();
+      newWindow.document.open();
+      newWindow.document.write(htmlContent);
+      newWindow.document.close();
+    } else {
+      // 如果狀態碼不是 200，表示是 BadRequest，獲取錯誤信息
+      const errorContent = await response.json();
+
+      // 顯示錯誤信息
+      alert(`錯誤碼: ${response.status}\n錯誤信息: ${errorContent.Message}\n詳細內容: ${errorContent.Details}`);
     }
-
-  
-  
-    const result = await response.json();
-    
-        // 顯示返回的值
-     console.log("Response from API:", result);
-    
-    // 如果您希望在頁面上顯示，可以使用 alert（如果值不大）
-      alert(JSON.stringify(result, null, 2));
-
-    // alert("J2");
-
-
-    const contentType = response.headers.get("Content-Type");
-
-  // let result;
   // if (contentType && contentType.includes("application/json")) {
   //   // 如果是 JSON 格式
   //   result = await response.json();
+
+
   // } else {
   //   // 如果是 HTML 頁面
   //   result = await response.text();
   // }
 
-  // // 如果是 HTML 頁面，直接跳轉
-  // if (contentType && contentType.includes("text/html")) {
-  //   document.open();
-  //   document.write(result);
-  //   document.close();
-  // } else {
-  //   console.log(result);
+  // // 顯示返回的值
+  // console.log("Response from API:", result);
+  
+
+
+
+  // // 如果您希望在頁面上顯示，可以使用 alert（如果值不大）
+  // alert(JSON.stringify(result, null, 2));
+
+  // // 如果是 HTML 格式，並且 `result.paymentPage` 存在
+  // if (result.paymentPage) {
+  //   // 打開新分頁
+  //   const newWindow = window.open();
+
+  //   // 寫入 HTML 內容到新分頁
+  //   newWindow.document.open();
+  //   newWindow.document.write(result.paymentPage);
+  //   newWindow.document.close();
   // }
 
 
-    // 使用 window.location.href 進行頁面跳轉
-    window.location.href = result.paymentPage;
-  } catch (error) {
-    console.error("Error submitting order:", error);
-    alert("Failed to submit order.");
-  }
-
-
-
-
-
-
-
-
-
-
-
+} catch (error) {
+  console.error("Error submitting order:", error);
+  alert("Failed to submit order.");
+}
 
   };
 
