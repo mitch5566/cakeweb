@@ -9,8 +9,9 @@ builder.WebHost.UseUrls("http://0.0.0.0:5000");
 // // Add services to the container.
 // builder.Services.AddControllersWithViews();
 
-// 註冊 GreenWorldPaymentService
-builder.Services.AddTransient<GreenWorldPaymentService>();
+// 設定 Kestrel 綁定到所有 IP 地址
+builder.WebHost.UseKestrel()
+    .UseUrls("http://0.0.0.0:5000"); // 讓應用程式監聽所有網卡上的5000端口
 
 
 
@@ -21,11 +22,16 @@ builder.Services.AddTransient<GreenWorldPaymentService>();
         // var paymentService = new GreenWorldPaymentService(httpClient);
 
         // // 執行測試的 POST 請求
-        // var result = await paymentService.CreatePaymentRequestAsync();
+        // var result = await paymentService.TestPostRequestAsync();
 
         // // 打印結果
         // Console.WriteLine(result);
 
+
+// 註冊 GreenWorldPaymentService
+
+// builder.Services.AddTransient<GreenWorldPaymentService>();
+builder.Services.AddHttpClient<GreenWorldPaymentService>();
 
 
 // 加入服務，並設定 MySQL 的連線字串
@@ -48,10 +54,11 @@ builder.Services.AddCors(options =>
     });
 }); //跨域存取for vue vite
 
-
-
 var app = builder.Build();
 
+
+// 處理 SPA 路由 (針對 Vue.js 的前端路由)
+app.MapFallbackToFile("index.html"); // 這會確保 SPA 路由被正確處理，並轉發到 index.html
 
 
 
@@ -65,10 +72,14 @@ if (!app.Environment.IsDevelopment())
 
 app.UseCors("AllowAllOrigins"); //上面跨域
 
-app.UseHttpsRedirection();
+
+// 移除或注釋掉這行代碼以禁用 HTTPS 重定向
+//app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
+
 
 app.UseAuthorization();
 
@@ -80,7 +91,9 @@ app.MapFallbackToFile("index.html");
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}"  
+    );
+
 
 // app.MapControllers();
 

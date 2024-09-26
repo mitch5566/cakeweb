@@ -13,7 +13,7 @@ export default createStore({
   actions: {async fetchProducts({ commit }) {
     try {
       // 調用 API 來獲取商品列表
-      const response = await axios.get('http://localhost:5120/api/products');
+      const response = await axios.get('/api/products');
       const products = response.data.data; // 假設商品資料在 data 裡
       commit('setProducts', products); // 將資料傳給 mutation
     } catch (error) {
