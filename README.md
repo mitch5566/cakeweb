@@ -25,23 +25,23 @@ dotnet new mvc -n cakeweb -o cakeweb
 # 指定專案檔案進行建置
 dotnet build ./cakeweb/cakeweb.csproj
 ```
->or  直接目錄內build
+or 
 ```bash
 cd cakeweb 
 dotnet build 
 dotnet publish -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true
 
-
 ```
 
->連接mysql 安裝這 包
+## 連接 MySQL 並安裝相關套件
 ```bash
+
+# 安裝 Entity Framework Core 套件
 dotnet add package Microsoft.EntityFrameworkCore
 dotnet add package Microsoft.EntityFrameworkCore.Tools
 dotnet add package Microsoft.EntityFrameworkCore.Design
 
-//ef包
-
+# 安裝 Pomelo MySQL EF Core Provider 及 EF Core CLI 工具
 dotnet add package Pomelo.EntityFrameworkCore.MySql
 dotnet tool install --global dotnet-ef
 
@@ -57,24 +57,20 @@ dotnet tool install --global dotnet-ef
 </pre>
 
 
-<pre> ├── /Controllers # 放置 MVC 控制器 
- │ └── PaymentController.cs 
- ├── /Services # 放置業務邏輯或與外部 API 互動的服務 
- │ └── GreenWorldPaymentService.cs </pre>
-
-
 ```bash
+
+# 建立 Data 資料夾並新增 ApplicationDbContext.cs
 dotnet new class -n ApplicationDbContext -o Data
 
+# 建立 Controllers 資料夾並新增 PaymentController.cs
 dotnet new class -n PaymentController -o Controllers
+
+# 建立 Services 資料夾並新增 GreenWorldPaymentService.cs
 dotnet new class -n GreenWorldPaymentService -o Services
-
-GreenWorldPaymentService
-
 
 
 ```
-建立空白檔案
+## 建立空白檔案
 
 ```bash
 echo "" > 目錄  建立檔案
@@ -82,28 +78,34 @@ echo "" > 目錄  建立檔案
 ```
 
 
->view 專案打包後 放到wwwroot
+## view 專案打包後 放到wwwroot
 ```bash
-xcopy dist\* ..\wwwroot\ /E /H /C /I
-chmod +x /var/www/cakewe
+# 複製打包後的檔案至 wwwroot
+xcopy dist/* ../wwwroot/ /E /H /C /I
 
+# 授權檔案可執行
+chmod +x /var/www/cakeweb
 
-sudo chmod  -R 777 cakeweb
-
+# 調整目錄權限
+sudo chmod -R 777 cakeweb
 ```
 
 
 
->mysql指令
+## mysql指令
 
 ```bash
+# 檢查 nginx 服務狀態
 systemctl status nginx
+
+# 以 root 帳號登入 MySQL
 sudo mysql -u root -p
+
+# 查看 MySQL 服務狀態
 sudo service mysql status
 
-重新啟動mysql:
+# 重新啟動 MySQL
 systemctl restart mysql
-
 ```
 
 ```bash
@@ -125,3 +127,5 @@ CREATE TABLE Payments (
     UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
+
+
