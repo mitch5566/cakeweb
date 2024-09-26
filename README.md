@@ -57,6 +57,12 @@ dotnet tool install --global dotnet-ef
 </pre>
 
 
+<pre> ├── /Controllers # 放置 MVC 控制器 
+ │ └── PaymentController.cs 
+ ├── /Services # 放置業務邏輯或與外部 API 互動的服務 
+ │ └── GreenWorldPaymentService.cs </pre>
+
+
 ```bash
 dotnet new class -n ApplicationDbContext -o Data
 
