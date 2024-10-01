@@ -4,7 +4,6 @@ import HomeView from '../pages/HomeView.vue';
 //import HomeView from './pages/HomeView.vue'
 // import ProductView from './pages/ProductView.vue'
 
-
 const routes = [
   { path: '/', component: HomeView }
 //   { path: '/products', component: ProductView },

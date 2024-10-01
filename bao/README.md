@@ -38,9 +38,32 @@ echo `` > src\router\index.ts
 # types的 vue-router
 yarn add @types/vue-router -D  
 
+```
 
+
+
+tsconfig.json 不動 
+
+# 產生後把雙印號去掉整理下
+```BASH
+echo "declare module '*.vue' { import { DefineComponent } from 'vue'; const component: DefineComponent<{}, {}, any>; export default component; }" > src/vue-shim.d.ts
+```
+
+tsconfig.app.json
+
+```json
+ "extends": "./tsconfig.json",
+"compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+ }
 
 ```
+
+
+
 
 
 
