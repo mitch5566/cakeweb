@@ -177,4 +177,17 @@ CREATE TABLE Payments (
 );
 ```
 
-
+```json
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["vuex"]
+  },
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+```
