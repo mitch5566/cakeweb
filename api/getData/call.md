@@ -1,7 +1,11 @@
 ### API  部署與配置筆記 php
 
+`https://developers.ecpay.com.tw/?p=9058`
+
+
 #### 使用 `scp` 進行檔案傳輸
 將 `index.php` 和 `getData.php` 傳輸到目標伺服器：
+ 
 
 
 ```bash
