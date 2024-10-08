@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google OAuth 2.0 Login</title>
+  </head>
+  <body>
+    <h1>Google OAuth 2.0 Login</h1>
+    <button id="googleLoginBtn">Login with Google</button>
+    <script>
+      const clientId =
+        "842700215323-vgbptbseluubcggv0bk7c697qju0e5jb.apps.googleusercontent.com";
+      const redirectUri = "http://127.0.0.1:5501/add.html"; // Your callback URL
+      const authUrl = "https://accounts.google.com/o/oauth2/auth";
+      const tokenUrl = "https://oauth2.googleapis.com/token";
+      const scope = "email profile";
+
+      document
+        .getElementById("googleLoginBtn")
+        .addEventListener("click", function () {
+          // Step 1: Redirect to Google's OAuth 2.0 endpoint
+          const url = `${authUrl}?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(
+            redirectUri
+          )}&scope=${encodeURIComponent(
+            scope
+          )}&access_type=offline&prompt=consent`;
+
+          // Redirect the user to the Google authentication page
+          window.location.href = url;
+        });
+
+      // Step 2: Get the authorization code from the URL after redirection
+      function getAuthorizationCode() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("code");
+      }
+
+      // Step 3: Exchange the authorization code for an access token
+      async function exchangeAuthorizationCodeForToken(authCode) {
+        const body = new URLSearchParams({
+          code: authCode,
+          client_id: clientId,
+          client_secret: "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", // Get this from Google Cloud Console
+          redirect_uri: redirectUri,
+          grant_type: "authorization_code",
+        });
+
+        const response = await fetch(tokenUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: body.toString(),
+        });
+
+        const data = await response.json();
+        console.log("Access Token Response:", data);
+        if (data.access_token) {
+          // Use the access token to get user information from Google
+          getUserInfo(data.access_token);
+        } else {
+          console.error("Error retrieving access token:", data);
+        }
+      }
+
+      // Step 4: Use the access token to get user information from Google
+      async function getUserInfo(accessToken) {
+        const response = await fetch(
+          "https://www.googleapis.com/oauth2/v2/userinfo",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        const userInfo = await response.json();
+        console.log("User Info:", userInfo);
+
+        // Step 5: Send user info to your backend API
+        await sendUserInfoToBackend(userInfo);
+      }
+
+      // Step 5: Send user info to your backend API
+      async function sendUserInfoToBackend(userInfo) {
+        const response = await fetch(
+          "http://localhost:5187/api/Auth/googlelogin",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: userInfo.email,
+              name: userInfo.name,
+              picture: userInfo.picture,
+            }),
+          }
+        );
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Backend Response:", result);
+          alert("Login successful: " + result.Message);
+        } else {
+          console.error(
+            "Error sending user info to backend:",
+            response.statusText
+          );
+        }
+      }
+
+      // Step 6: Check if authorization code exists in the URL and exchange for token
+      const authCode = getAuthorizationCode();
+      if (authCode) {
+        exchangeAuthorizationCodeForToken(authCode);
+      }
+    </script>
+  </body>
+</html>
