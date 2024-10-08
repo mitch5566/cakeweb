@@ -2,7 +2,7 @@
  <header class="header">
 
     <div class="logo">
-      <img src="../assets/images/header_logo_compressed.jpg" alt="Logo" class="logo-img" />
+      <img src="../assets/logos/header_logo_compressed.jpg" alt="Logo" class="logo-img" />
     </div>
     <div class="nav-icons">
       <!-- 會員按鈕 -->
@@ -13,8 +13,9 @@
         @click="goToHome"
       />
 
-      <!-- 購物車按鈕 -->
-      <img src="../assets/images/button_cart.png" alt="Cart" class="icon-btn" />
+    <router-link to="/products">
+    <img src="../assets/images/button_cart.png" alt="Cart" class="icon-btn" />
+    </router-link>
 
       <!-- 漢堡選單 -->
       <div class="hamburger-menu">
@@ -34,7 +35,7 @@
             <li><a href="#">聯絡我們</a></li>
             <br />
             <button class="login-btn" @click="goToHome">會員登入</button>
-            <button class="register-btn">註冊新會員</button>
+            <button class="register-btn" >註冊新會員</button>
           </ul>
         </nav>
       </div>
@@ -43,7 +44,9 @@
 
 </template>
   
-  <script>
+  <script >
+
+
 
 export default {
   data() {
@@ -63,15 +66,13 @@ export default {
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     goToHome() {
-      this.$router.push({ name: "Memberlogin" }); // 使用路由名稱進行跳轉
-    },
+      this.$router.push({ path: '/login' });
+    }
+    ,
   },
 };
-
   </script>
   
-
-
   <style scoped>
   .header {
     display: flex;

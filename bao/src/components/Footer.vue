@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <p>&copy; 2024 你的網站名稱</p>
+    <p>&copy;© 2024 你的果子春天</p>
   </footer>
 </template>
 

@@ -1,4 +1,16 @@
-:root {
+@import url('https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css');
+
+
+#app {
+  background-image: url("assets/images/indexbg.jpg"); /* 背景圖片路徑 */
+  background-size: cover; /* 背景圖片覆蓋整個頁面 */
+  background-position: top; /* 背景圖片從頂部顯示 */
+  background-repeat: no-repeat; /* 防止背景重複 */
+  min-height: 100vh; /* 確保背景圖片覆蓋整個瀏覽器視窗 */
+}
+
+
+/* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -76,4 +88,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
