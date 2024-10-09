@@ -132,6 +132,8 @@ echo "" > 目錄  建立檔案
 # 複製打包後的檔案至 wwwroot
 xcopy dist/* ../wwwroot/ /E /H /C /I
 
+xcopy dist\* ..\wwwroot\ /E /H /C /I /Y
+
 # 授權檔案可執行
 chmod +x /var/www/cakeweb
 
