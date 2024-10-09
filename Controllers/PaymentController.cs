@@ -22,47 +22,20 @@ public class PaymentController : ControllerBase
     [HttpPost("CreatePayment")]
     public async Task<IActionResult> CreatePayment([FromBody] Dictionary<string, string> orderData)
     {
-          // 記錄接收到的請求
-        //Console.WriteLine($"Received request: {JsonConvert.SerializeObject(orderData)}");
-        // Dictionary<string, string> orderData = new Dictionary<string, string>();
+       // 調用 TestPostRequestAsync 獲取 HttpResponseMessage
+    var response = await _paymentService.TestPostRequestAsync(orderData);
 
-        // // 添加額外的必需參數
-        // orderData.Add("MerchantID", "3002607");
-        // orderData.Add("MerchantTradeDate", System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-        // orderData.Add("PaymentType", "aio");
-        // orderData.Add("ReturnURL", "https://yourdomain.com/api/payment/ReturnURL"); // 後端 ReturnURL
-        // orderData.Add("ChoosePayment", "ALL");
-        // orderData.Add("EncryptType", "1");
+    // 構建返回給前端的內容
+    var content = await response.Content.ReadAsStringAsync();
 
-    // 調用 GreenWorldPaymentService 來處理支付請求
-
-
-    var result = await _paymentService.TestPostRequestAsync(orderData);
-
-    // 回應支付頁面給前端
-            
-            
-            //Console.WriteLine("看看裡面有什麼"+result);
-
-    if (result.Item1) // 布林值在 Item1
+    // 返回結果到前端，包括狀態碼、內容和標頭
+    return new ContentResult
     {
-        return new ContentResult
-        {
-            Content = result.Item2, // 內容在 Item2
-            ContentType = "text/html"
-        };
-    }
-    else
-    {
-        return BadRequest(new
-        {
-            Code = 400,
-            Message = "訂單失敗",
-            Details = result.Item2
-        });
-    }
-
-          // return Content(result, "application/json");
+        Content = content,
+        StatusCode = (int)response.StatusCode,
+        ContentType = response.Content.Headers.ContentType?.ToString() ?? "text/html"
+    };
+    
 
     }
 

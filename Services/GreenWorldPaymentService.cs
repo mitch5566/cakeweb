@@ -14,7 +14,7 @@ public class GreenWorldPaymentService
         _httpClient = httpClient;
     }
 
-    public async Task<Tuple<bool, string>> TestPostRequestAsync (Dictionary<string, string> parameters)
+    public async Task<HttpResponseMessage> TestPostRequestAsync (Dictionary<string, string> parameters)
     {
         // 測試使用 POST 請求到一個測試 API URL
         //var requestUrl = "https://jsonplaceholder.typicode.com/posts"; // 測試 API
@@ -146,6 +146,8 @@ public class GreenWorldPaymentService
                 sortedParameters.Add("HashIV", hashIV);
 
         // 將參數轉換為表單格式1 因為要做轉小寫 先不用FormUrlEncodedContent
+
+        
         //var content1 = new FormUrlEncodedContent(sortedParameters);
         // Step 1: 將鍵值對拼接成字串
         var content = string.Join("&", sortedParameters.Select(p => $"{p.Key}={p.Value}"));
@@ -174,9 +176,19 @@ public class GreenWorldPaymentService
             parameters.Add("CheckMacValue", sha256Hash);
 
         }
+
+
         //毛很多要post就可以 FormUrlEncodedContent 
 
         var form1 = new FormUrlEncodedContent(parameters);
+
+//  post 前 先遍立一次
+
+        foreach (var param in parameters)
+            {
+            Console.WriteLine($"{param.Key}: {param.Value}");
+            }
+
 
         // 發送 POST 請求
         var response = await _httpClient.PostAsync(requestUrl, form1);
@@ -184,14 +196,16 @@ public class GreenWorldPaymentService
         // 檢查回應是否成功
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadAsStringAsync();
-        
-           return Tuple.Create(true, result); // 成功時返回 Tuple // 成功時返回 true 和內容
+            //var result = await response.Content.ReadAsStringAsync();
+
+            return response;
+        //    return Tuple.Create(true, result); 
+           // 成功時返回 Tuple // 成功時返回 true 和內容
 
         }
         else
         {
-            return Tuple.Create(false, response.StatusCode.ToString()); // 成功時返回 Tuple$"Error: {response.StatusCode}";
+            return response; // 成功時返回 Tuple$"Error: {response.StatusCode}";
         }
 
     }

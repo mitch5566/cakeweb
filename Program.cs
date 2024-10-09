@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 //設定 Kestrel 綁定到所有 IP 地址（包括外部）
-builder.WebHost.UseUrls("http://0.0.0.0:5000");
+
+//builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
 // // Add services to the container.
 // builder.Services.AddControllersWithViews();
@@ -12,21 +13,6 @@ builder.WebHost.UseUrls("http://0.0.0.0:5000");
 // 設定 Kestrel 綁定到所有 IP 地址
 builder.WebHost.UseKestrel()
     .UseUrls("http://0.0.0.0:5000"); // 讓應用程式監聽所有網卡上的5000端口
-
-
-
-        // // 初始化 HttpClient
-        // var httpClient = new HttpClient();
-
-        // // 初始化你的 GreenWorldPaymentService
-        // var paymentService = new GreenWorldPaymentService(httpClient);
-
-        // // 執行測試的 POST 請求
-        // var result = await paymentService.TestPostRequestAsync();
-
-        // // 打印結果
-        // Console.WriteLine(result);
-
 
 // 註冊 GreenWorldPaymentService
 
@@ -83,10 +69,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-
-
-// 處理 SPA 路由 (針對 Vue.js 的前端路由)
-app.MapFallbackToFile("index.html");
 
 
 app.MapControllerRoute(
