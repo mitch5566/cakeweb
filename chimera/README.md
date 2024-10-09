@@ -8,7 +8,7 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 
 ```bush
 # 複製打包後的檔案至 wwwroot
-xcopy dist/* ../wwwroot/ /E /H /C /I /Y
+xcopy dist\* ..\wwwroot\ /E /H /C /I /Y
 
 yarn build
 yarn dev

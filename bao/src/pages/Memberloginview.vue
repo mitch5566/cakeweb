@@ -44,10 +44,22 @@
           data-callback="handleCredentialResponse"
           data-auto_select="false"
           data-itp_support="true"
-        ></div>
-        <div class="g_id_signin" data-type="standard"></div>
+        ></div>ㄋ
+        <div class="g_id_signin" data-type="standard">之</div>ㄇ
       </div>
+
+      <!-- <GoogleLogin
+        clientId="YOUR_GOOGLE_CLIENT_ID"
+        @success="onSuccess"
+        @error="onError"
+      >
+        <button>Login with Google</button>
+      </GoogleLogin> -->
+      
+
+
     </div>
+
     <Footer />
   </div>
 </template>
@@ -56,7 +68,7 @@
 import Header from '../components/Header.vue';
 import Footer from '../components/Footer.vue';
 // import Footer from '../components/Footer.vue';
-
+import { GoogleLogin } from 'vue3-google-login'
 
 
 
@@ -65,6 +77,7 @@ export default {
   components: {
     Header,
     Footer,
+    GoogleLogin
   },
   data() {
     return {

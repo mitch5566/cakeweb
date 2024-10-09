@@ -126,7 +126,6 @@ echo "" > 目錄  建立檔案
 
 ```
 
-
 ## view 專案打包後 放到wwwroot
 ```bash
 # 複製打包後的檔案至 wwwroot

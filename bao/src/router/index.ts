@@ -3,6 +3,7 @@ import HomeView from '../pages/HomeView.vue';
 import AboutView from '../pages/AboutView.vue';
 import MemberLoginView from "../pages/Memberloginview.vue";
 import ProductView from '../pages/ProductView.vue';
+import GoogleLogin from '../pages/GoogleLogin.vue';
 //import HomeView from './pages/HomeView.vue'
 // import ProductView from './pages/ProductView.vue'
 
@@ -10,7 +11,8 @@ const routes = [
   { path: '/', component: HomeView },
   { path: '/products', component: ProductView },
   { path: '/about', component: AboutView },
-  {path: '/login',component: MemberLoginView}
+  {path: '/login',component: MemberLoginView},
+  {path: '/rd3login',component: GoogleLogin}
 
 //   { path: '/products', component: ProductView },
 ]

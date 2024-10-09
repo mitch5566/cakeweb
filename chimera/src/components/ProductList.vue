@@ -42,7 +42,7 @@
   </template>
   
   <script setup>
-  import axios from 'axios';
+  //import axios from 'axios';
 import { ref, computed, onMounted } from 'vue';
   import { useStore } from 'vuex';
   
@@ -112,7 +112,8 @@ const totalPrice = computed(() => {
 
     const orderPayload = {
     MerchantID: "3002607",
-    MerchantTradeNo: "TestOrder" + Date.now(),
+    // MerchantTradeNo: "TestOrder" + Date.now(),
+    MerchantTradeNo: "Cakephp" + Date.now(),
     // MerchantTradeDate: new Date().toISOString(),
     MerchantTradeDate: new Date().toLocaleString('sv'),
     PaymentType: "aio",
@@ -121,7 +122,8 @@ const totalPrice = computed(() => {
     TradeDesc: "Test Payment",
     // ItemName: order.map( p =>`${p.n}xOx${p.q}`).join("#").toString(),
     ItemName: "qqqqqq",
-    ReturnURL: "https://yourdomain.com/api/payment/",
+    ReturnURL: "http://34.168.66.212:80",
+    // ReturnURL: "https://yourdomain.com/api/payment/",
     ChoosePayment: "ALL",
     EncryptType: (1).toString()
   };
@@ -129,9 +131,12 @@ const totalPrice = computed(() => {
 
   // https://jsonplaceholder.typicode.com/posts
   // http://localhost:5000/api/payment/CreatePayment
+
+
+  
   alert(JSON.stringify(orderPayload));
   try {
-    const response = await fetch("http://localhost:5000/api/payment/CreatePayment", {
+    const response = await fetch("/api/payment/CreatePayment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -143,13 +148,23 @@ const totalPrice = computed(() => {
       // 檢查回應狀態
       if (response.ok) {
       // 如果狀態碼是 200，則表示是 ContentResult
-      const htmlContent = await response.text(); // 以文字形式獲取內容
+    console.log(response);
 
-      // 創建一個新的窗口，打開 HTML 內容
-      const newWindow = window.open();
-      newWindow.document.open();
-      newWindow.document.write(htmlContent);
-      newWindow.document.close();
+    // 如果你想要顯示整個 response 的內容和標頭
+    const headers = [...response.headers.entries()].map(([key, value]) => `${key}: ${value}`).join("\n");
+    const status = `Status: ${response.status} ${response.statusText}`;
+
+    alert(`${status}\n\nHeaders:\n${headers}`);
+
+    const htmlContent = await response.text();
+    // newWindow.document.write(htmlContent);
+
+    const newWindow = window.open();
+    newWindow.document.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+
+
     } else {
       // 如果狀態碼不是 200，表示是 BadRequest，獲取錯誤信息
       const errorContent = await response.json();
@@ -161,47 +176,12 @@ const totalPrice = computed(() => {
   //   // 如果是 JSON 格式
   //   result = await response.json();
 
-
-  // } else {
-  //   // 如果是 HTML 頁面
-  //   result = await response.text();
-  // }
-
-  // // 顯示返回的值
-  // console.log("Response from API:", result);
-  
-
-
-
-  // // 如果您希望在頁面上顯示，可以使用 alert（如果值不大）
-  // alert(JSON.stringify(result, null, 2));
-
-  // // 如果是 HTML 格式，並且 `result.paymentPage` 存在
-  // if (result.paymentPage) {
-  //   // 打開新分頁
-  //   const newWindow = window.open();
-
-  //   // 寫入 HTML 內容到新分頁
-  //   newWindow.document.open();
-  //   newWindow.document.write(result.paymentPage);
-  //   newWindow.document.close();
-  // }
-
-
 } catch (error) {
   console.error("Error submitting order:", error);
   alert("Failed to submit order.");
 }
 
   };
-
-
-
-
-
-
-
-
 
 
   
@@ -273,6 +253,5 @@ button {
 button:hover {
   background-color: #FFA500;
 }
-
 
   </style>

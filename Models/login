@@ -1,0 +1,9 @@
+namespace cakeweb.Models;
+{
+    public class User
+    {
+        public int CustomreId { get; set; }
+        public required string Account { get; set; }
+        public required string Password { get; set; }
+    }
+}
